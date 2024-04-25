@@ -1,8 +1,8 @@
 import requests
 import matplotlib.pyplot as plt
 
-api_key = "BL366XG71WDZVE3L"
-channel_id = "2509864"
+api_key = "your_api"
+channel_id = "your_channnel"
 
 entry_id =[]
 field_1_temp = []
