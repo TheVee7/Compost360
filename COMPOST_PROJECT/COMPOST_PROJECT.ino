@@ -9,7 +9,7 @@ const char* password = "dayalbagh";
 
 // ThingSpeak settings
 const char* server = "api.thingspeak.com";
-const String apiKey = "QOOG46HJXD332MV7";
+const String apiKey = "your api";
 
 // Pins for sensors
 const int ds18b20Pin = 4; // GPIO 4
