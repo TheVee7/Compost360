@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="card fade-in" style="margin-top: 20px;">
+    <h2>Test Card</h2>
+    <p>If you see this in a white card with a shadow, CSS is working!</p>
+</div>
+<div class="purpose-container">
+    <h1 class="animated-title">What is your purpose?</h1>
+    <form action="{{ url_for('handle_purpose') }}" method="post">
+        <div class="purpose-options">
+            <button type="submit" name="purpose" value="individual" class="purpose-btn">
+                Individual
+            </button>
+            <button type="submit" name="purpose" value="society" class="purpose-btn">
+                Society/Organization
+            </button>
+            <button type="submit" name="purpose" value="research" class="purpose-btn">
+                Research
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

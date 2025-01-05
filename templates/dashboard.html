@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="metrics-grid">
+        <div class="metric-card temperature">
+            <h3>Temperature</h3>
+            <div class="metric-value" id="temperature">{{ "%.1f"|format(entry.temperature) }}°C</div>
+        </div>
+        <div class="metric-card moisture">
+            <h3>Moisture</h3>
+            <div class="metric-value" id="moisture">{{ "%.1f"|format(entry.moisture) }}%</div>
+        </div>
+        <div class="metric-card maturation">
+            <h3>Estimated Maturation</h3>
+            <div class="metric-value">{{ entry.maturation_estimate }} days</div>
+        </div>
+    </div>
+
+    <div class="suggestions-panel">
+        <h3>Suggestions</h3>
+        <div id="suggestions-content">
+            {% if entry.temperature > 35 %}
+                <p>⚠️ Temperature is high - consider adding brown materials</p>
+            {% elif entry.temperature < 25 %}
+                <p>⚠️ Temperature is low - add green materials or turn the pile</p>
+            {% endif %}
+
+            {% if entry.moisture > 60 %}
+                <p>⚠️ Too wet - add dry brown materials</p>
+            {% elif entry.moisture < 45 %}
+                <p>⚠️ Too dry - add water or green materials</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="share-panel">
+        <h3>Share Updates</h3>
+        <button onclick="shareViaEmail()" class="share-btn email">Share via Email</button>
+        <button onclick="shareViaWhatsApp()" class="share-btn whatsapp">Share via WhatsApp</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
