@@ -13,7 +13,7 @@ def create_app():
     mail = Mail(app)
 
     with app.app_context():
-        db.create_all()  # Create tables within app context
+        db.create_all()  
 
     @app.route('/')
     def index():
@@ -22,7 +22,10 @@ def create_app():
     @app.route('/purpose', methods=['POST'])
     def handle_purpose():
         purpose = request.form.get('purpose')
-        if purpose == 'individual':
+        if purpose is None:
+            flash('Purpose is required.')
+            return redirect(url_for('index'))
+        elif purpose == 'individual':
             return redirect(url_for('individual'))
         return redirect(url_for('contact'))
 
@@ -89,4 +92,5 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+    

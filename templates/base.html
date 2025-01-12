@@ -9,8 +9,11 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+    
     <nav class="navbar">
         <div class="logo">Compost360</div>
+        <!-- Hamburger Toggle Button -->
+        <button class="navbar-toggle" aria-expanded="false" aria-label="Toggle navigation">☰</button>
         <div class="nav-links">
             <a href="{{ url_for('index') }}">Home</a>
             <a href="{{ url_for('about') }}">About</a>
@@ -34,8 +37,11 @@
         <p>&copy; 2025 Compost360. All rights reserved.</p>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
     <script src="{{ url_for('static', filename='js/cursor.js') }}"></script>
+   
+
+    
     {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -45,3 +45,4 @@ class CustomCursor {
 }
 
 new CustomCursor();
+

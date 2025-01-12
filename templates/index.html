@@ -3,20 +3,22 @@
 
 {% block content %}
 <div class="card fade-in" style="margin-top: 20px;">
-    <h2>Test Card</h2>
-    <p>If you see this in a white card with a shadow, CSS is working!</p>
+    <h1>Be the Change!</h1>
+    <p>Every small action counts! By composting, you're saving the planet one scrap at a time. Compost360 makes it easy and rewarding.</p>
+    <h3>Get Started Today</h3>
+
 </div>
 <div class="purpose-container">
     <h1 class="animated-title">What is your purpose?</h1>
     <form action="{{ url_for('handle_purpose') }}" method="post">
         <div class="purpose-options">
-            <button type="submit" name="purpose" value="individual" class="purpose-btn">
+            <button type="submit" name="purpose" value="individual" class="btn">
                 Individual
             </button>
-            <button type="submit" name="purpose" value="society" class="purpose-btn">
+            <button type="submit" name="purpose" value="society" class="btn">
                 Society/Organization
             </button>
-            <button type="submit" name="purpose" value="research" class="purpose-btn">
+            <button type="submit" name="purpose" value="research" class="btn">
                 Research
             </button>
         </div>

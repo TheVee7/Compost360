@@ -48,25 +48,3 @@ class Dashboard {
         this.suggestionsElement.innerHTML = suggestions.map(s => `<p>${s}</p>`).join('');
     }
 }
-
-// Initialize dashboard
-document.addEventListener('DOMContentLoaded', () => {
-    new Dashboard();
-});
-
-function shareViaEmail() {
-    const subject = 'Compost Status Update';
-    const body = `Current compost status:\n
-Temperature: ${document.getElementById('temperature').textContent}\n
-Moisture: ${document.getElementById('moisture').textContent}`;
-    
-    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
-
-function shareViaWhatsApp() {
-    const text = `Compost Status Update:\n
-Temperature: ${document.getElementById('temperature').textContent}\n
-Moisture: ${document.getElementById('moisture').textContent}`;
-    
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-}
