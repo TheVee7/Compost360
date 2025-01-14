@@ -46,7 +46,7 @@ def create_app():
             moisture=random.uniform(40, 70),
             maturation_estimate=random.randint(30, 90)
         )
-        
+         
         db.session.add(entry)
         db.session.commit()
         
