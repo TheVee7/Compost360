@@ -6,43 +6,84 @@
     <div class="metrics-grid">
         <div class="metric-card temperature">
             <h3>Temperature</h3>
-            <div class="metric-value" id="temperature">{{ "%.1f"|format(entry.temperature) }}°C</div>
+            <div class="metric-value" id="temperature"></div>
         </div>
         <div class="metric-card moisture">
             <h3>Moisture</h3>
-            <div class="metric-value" id="moisture">{{ "%.1f"|format(entry.moisture) }}%</div>
+            <div class="metric-value" id="moisture"></div>
         </div>
         <div class="metric-card maturation">
             <h3>Estimated Maturation</h3>
-            <div class="metric-value">{{ entry.maturation_estimate }} days</div>
+            <div class="metric-value" id="maturation"></div>
         </div>
     </div>
 
     <div class="suggestions-panel">
         <h3>Suggestions</h3>
-        <div id="suggestions-content">
-            {% if entry.temperature > 35 %}
-                <p>⚠️ Temperature is high - consider adding brown materials</p>
-            {% elif entry.temperature < 25 %}
-                <p>⚠️ Temperature is low - add green materials or turn the pile</p>
-            {% endif %}
-
-            {% if entry.moisture > 60 %}
-                <p>⚠️ Too wet - add dry brown materials</p>
-            {% elif entry.moisture < 45 %}
-                <p>⚠️ Too dry - add water or green materials</p>
-            {% endif %}
-        </div>
+        <div id="suggestions-content"></div>
     </div>
 
     <div class="share-panel">
         <h3>Share Updates</h3>
         <button onclick="shareViaEmail()" class="share-btn email">Share via Email</button>
         <button onclick="shareViaWhatsApp()" class="share-btn whatsapp">Share via WhatsApp</button>
+        <p id="no-data-message" style="display:none;">No data available at the moment.</p>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+    // JavaScript will now fetch the data and update the page dynamically
+    document.addEventListener('DOMContentLoaded', () => {
+        const dashboard = new Dashboard();
+        dashboard.init();
+    });
+
+    class Dashboard {
+        init() {
+            this.fetchData();
+        }
+
+        fetchData() {
+            fetch('/api/dashboard-data')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.suggestions && data.suggestions.length === 0) {
+                        this.showNoDataMessage();
+                    } else {
+                        this.updateDashboard(data);
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        showNoDataMessage() {
+            document.getElementById('no-data-message').style.display = 'block';
+            document.querySelector('.metrics-grid').style.display = 'none';
+            document.querySelector('.suggestions-panel').style.display = 'none';
+        }
+
+        updateDashboard(data) {
+            // Update the page with the fetched data
+            document.getElementById('temperature').textContent = `${data.temperature.toFixed(1)}°C`;
+            document.getElementById('moisture').textContent = `${data.moisture.toFixed(1)}%`;
+            document.getElementById('maturation').textContent = `${data.maturation_estimate} days`;
+
+            // Dynamically update suggestions
+            const suggestionsContent = document.getElementById('suggestions-content');
+            suggestionsContent.innerHTML = '';  // Clear existing suggestions
+
+            data.suggestions.forEach(suggestion => {
+                suggestionsContent.innerHTML += `<p>${suggestion}</p>`;
+            });
+
+            // Hide the "No data available" message
+            document.getElementById('no-data-message').style.display = 'none';
+            document.querySelector('.metrics-grid').style.display = 'block';
+            document.querySelector('.suggestions-panel').style.display = 'block';
+        }
+    }
+</script>
 {% endblock %}

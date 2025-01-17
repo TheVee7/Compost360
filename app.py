@@ -1,19 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_mail import Mail, Message
-from database import db
-from models import User, CompostEntry
 from config import Config
 import random
+from Calculation import CompostMonitor, fetch_data_from_thingspeak
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    db.init_app(app)
     mail = Mail(app)
-
-    with app.app_context():
-        db.create_all()  
 
     @app.route('/')
     def index():
@@ -36,27 +31,13 @@ def create_app():
     @app.route('/submit_waste', methods=['POST'])
     def submit_waste():
         waste_type = request.form.get('waste_type')
-        quantity = float(request.form.get('quantity'))
-        
-        entry = CompostEntry(
-            user_id=1,  # Replace with actual user ID after authentication
-            waste_type=waste_type,
-            quantity=quantity,
-            temperature=random.uniform(20, 40),
-            moisture=random.uniform(40, 70),
-            maturation_estimate=random.randint(30, 90)
-        )
-         
-        db.session.add(entry)
-        db.session.commit()
         
         return redirect(url_for('dashboard'))
 
     @app.route('/dashboard')
     def dashboard():
-        # Fetch latest compost entry for demo
-        entry = CompostEntry.query.order_by(CompostEntry.date_added.desc()).first()
-        return render_template('dashboard.html', entry=entry)
+        # Simulate fetching latest compost entry for demo
+        return render_template('dashboard.html')
 
     @app.route('/about')
     def about():
@@ -80,17 +61,22 @@ def create_app():
         
         return render_template('contact.html')
 
-    @app.route('/api/sensor_data')
-    def sensor_data():
-        # Simulate sensor data
-        return jsonify({
-            'temperature': random.uniform(20, 40),
-            'moisture': random.uniform(40, 70)
-        })
+    @app.route('/api/dashboard-data')
+    def dashboard_data():
+        # Check if data exists (in your case, there might be no data in the DB or source)
+        entry = None  # No data available currently
+        
+        if entry is None:
+            # If no data, return a response indicating no data is available
+            return jsonify({'message': 'No data available'}), 404
+        
+        # If data exists, return it
+        return jsonify(entry)
+
+
 
     return app
 
 if __name__ == '__main__':
     app = create_app()
     app.run(host='0.0.0.0', port=5000, debug=True)
-    

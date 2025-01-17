@@ -1,3 +1,6 @@
+import requests
+
+
 class CompostMonitor:
     def __init__(self):
         # Ideal temperature ranges in Celsius
@@ -82,23 +85,38 @@ Analysis:"""
                 
         return status
 
+def fetch_data_from_thingspeak(channel_id, read_api_key):
+    """Fetch the latest data from ThingSpeak."""
+    url = f"https://api.thingspeak.com/channels/{channel_id}/feeds.json?api_key={read_api_key}&results=1"
+    response = requests.get(url)
+    data = response.json()
+    if 'feeds' in data and len(data['feeds']) > 0:
+        latest_feed = data['feeds'][0]
+        return latest_feed
+    else:
+        return None
+
 # Example usage
 def main():
     monitor = CompostMonitor()
     
-    # Example measurements over 5 days
-    measurements = [
-        (1, 25, 50),  # Day 1: Normal start
-        (2, 30, 45),  # Day 2: Good progression
-        (3, 35, 55),  # Day 3: Continuing to heat up
-        (4, 48, 52),  # Day 4: Reached thermophilic phase
-        (5, 20, 58),  # Day 5: Stable thermophilic
-    ]
+    # ThingSpeak channel details
+    CHANNEL_ID = '2509864'
+    API_KEY = 'BL366XG71WDZVE3L'
     
-    for day, temp, moisture in measurements:
+    # Fetch the latest data from ThingSpeak
+    latest_data = fetch_data_from_thingspeak(CHANNEL_ID, API_KEY)
+    
+    if latest_data:
+        day = int(latest_data['entry_id'])
+        temperature = float(latest_data['field1'])  # Assuming temperature is in field1
+        moisture = float(latest_data['field2'])     # Assuming moisture is in field2
+        
         print(f"\nAdding measurement for Day {day}")
-        result = monitor.add_measurement(day, temp, moisture)
+        result = monitor.add_measurement(day, temperature, moisture)
         print(result)
+    else:
+        print("No data available from ThingSpeak.")
 
 if __name__ == "__main__":
     main()
