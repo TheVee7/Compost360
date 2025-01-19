@@ -96,27 +96,3 @@ def fetch_data_from_thingspeak(channel_id, read_api_key):
     else:
         return None
 
-# Example usage
-def main():
-    monitor = CompostMonitor()
-    
-    # ThingSpeak channel details
-    CHANNEL_ID = '2509864'
-    API_KEY = 'BL366XG71WDZVE3L'
-    
-    # Fetch the latest data from ThingSpeak
-    latest_data = fetch_data_from_thingspeak(CHANNEL_ID, API_KEY)
-    
-    if latest_data:
-        day = int(latest_data['entry_id'])
-        temperature = float(latest_data['field1'])  # Assuming temperature is in field1
-        moisture = float(latest_data['field2'])     # Assuming moisture is in field2
-        
-        print(f"\nAdding measurement for Day {day}")
-        result = monitor.add_measurement(day, temperature, moisture)
-        print(result)
-    else:
-        print("No data available from ThingSpeak.")
-
-if __name__ == "__main__":
-    main()

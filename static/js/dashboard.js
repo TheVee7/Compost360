@@ -1,54 +1,44 @@
-class Dashboard {
-    constructor() {
-        this.temperatureElement = document.getElementById('temperature');
-        this.moistureElement = document.getElementById('moisture');
-        this.suggestionsElement = document.getElementById('suggestions-content');
-    }
+function fetchData() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'block'; // Show the loader
 
-    fetchData() {
-        fetch('/api/dashboard-data')
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === 'No data available') {
-                    this.showNoDataMessage(); // Handle "No data" case
-                } else {
-                    this.updateDashboard(data); // Regular update if data exists
-                }
-            })
-            .catch(error => console.error('Error fetching data:', error));
-    }
-    
-    showNoDataMessage() {
-        this.temperatureElement.textContent = "No data available.";
-        this.moistureElement.textContent = "No data available.";
-        this.suggestionsElement.textContent = "No data available.";
-    }
-    
-
-    updateDashboard(data) {
-        // Update temperature and moisture values
-        this.temperatureElement.textContent = data.temperature + "°C";
-        this.moistureElement.textContent = data.moisture + "%";
-        
-        // Update suggestions dynamically
-        this.suggestionsElement.innerHTML = '';
-        if (data.suggestions && data.suggestions.length > 0) {
-            data.suggestions.forEach(suggestion => {
-                const suggestionElement = document.createElement('p');
-                suggestionElement.textContent = suggestion;
-                this.suggestionsElement.appendChild(suggestionElement);
-            });
-        } else {
-            this.suggestionsElement.innerHTML = "<p>No suggestions available.</p>";
-        }
-    }
-
-    init() {
-        this.fetchData();
-    }
+    fetch('/api/dashboard-data')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Fetched Data:', data);  // Log the data to the console
+            loader.style.display = 'none'; // Hide the loader
+            if (data.error || (data.suggestions && data.suggestions.length === 0)) {
+                this.showNoDataMessage();
+            } else {
+                this.updateDashboard(data);
+            }
+        })
+        .catch(error => {
+            loader.style.display = 'none'; // Hide the loader on error
+            console.error('Error fetching data:', error);
+            this.showNoDataMessage();
+        });
 }
+window.onload = function() {
+    fetchData();
+};
 
-document.addEventListener('DOMContentLoaded', () => {
-    const dashboard = new Dashboard();
-    dashboard.init();
-});
+
+function updateDashboard(data) {
+    console.log('Data received:', data); // Log the data
+
+    document.getElementById('temperature').textContent = `${data.temperature.toFixed(1)}°C`;
+    document.getElementById('moisture').textContent = `${data.moisture.toFixed(1)}%`;
+    document.getElementById('maturation').textContent = `${data.maturation_estimate} days`;
+
+    const suggestionsContent = document.getElementById('suggestions-content');
+    suggestionsContent.innerHTML = ''; // Clear existing suggestions
+
+    (data.suggestions || []).forEach(suggestion => {
+        suggestionsContent.innerHTML += `<p>${suggestion}</p>`;
+    });
+
+    document.getElementById('no-data-message').style.display = 'none';
+    document.querySelector('.metrics-grid').style.display = 'block';
+    document.querySelector('.suggestions-panel').style.display = 'block';
+}

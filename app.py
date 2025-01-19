@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_mail import Mail, Message
 from config import Config
-import random
 from Calculation import CompostMonitor, fetch_data_from_thingspeak
 
 def create_app():
@@ -60,23 +59,44 @@ def create_app():
             return redirect(url_for('contact'))
         
         return render_template('contact.html')
-
     @app.route('/api/dashboard-data')
     def dashboard_data():
-        # Check if data exists (in your case, there might be no data in the DB or source)
-        entry = None  # No data available currently
+        monitor = CompostMonitor()
         
-        if entry is None:
-            # If no data, return a response indicating no data is available
-            return jsonify({'message': 'No data available'}), 404
+        CHANNEL_ID = '2509864'
+        API_KEY = 'BL366XG71WDZVE3L'
         
-        # If data exists, return it
-        return jsonify(entry)
+        # Fetch the latest data from ThingSpeak
+        latest_data = fetch_data_from_thingspeak(CHANNEL_ID, API_KEY)
+        
+        if latest_data:
+            day = int(latest_data['entry_id'])
+            temperature = float(latest_data['field2'])  # Assuming temperature is in field2
+            moisture = float(latest_data['field1'])     # Assuming moisture is in field1
+        
+            # Get the analysis and recommendations
+            analysis_report = monitor.add_measurement(day, temperature, moisture)
+        
+            # Check if there are any recommendations in the report
+            if "Recommendations:" in analysis_report:
+                suggestions = analysis_report.split("\nRecommendations:")[1].strip().split("\n")
+            else:
+                suggestions = []  # No recommendations if not present
+        
+            # Optionally, you can calculate maturation_estimate dynamically based on your composting model
+            maturation_estimate = 30  # Replace with dynamic calculation if required
 
+            return jsonify({
+                "temperature": temperature,
+                "moisture": moisture,
+                "maturation_estimate": maturation_estimate,
+                "suggestions": suggestions
+            })
+        else:
+            return jsonify({"error": "No data available from ThingSpeak."}), 404
 
-
+    
     return app
-
 if __name__ == '__main__':
     app = create_app()
     app.run(host='0.0.0.0', port=5000, debug=True)

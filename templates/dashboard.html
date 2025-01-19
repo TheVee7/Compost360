@@ -2,6 +2,8 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+<div id="loader" style="display: none;">Loading...</div>
+
 <div class="dashboard-container">
     <div class="metrics-grid">
         <div class="metric-card temperature">
@@ -34,56 +36,5 @@
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-<script>
-    // JavaScript will now fetch the data and update the page dynamically
-    document.addEventListener('DOMContentLoaded', () => {
-        const dashboard = new Dashboard();
-        dashboard.init();
-    });
-
-    class Dashboard {
-        init() {
-            this.fetchData();
-        }
-
-        fetchData() {
-            fetch('/api/dashboard-data')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.suggestions && data.suggestions.length === 0) {
-                        this.showNoDataMessage();
-                    } else {
-                        this.updateDashboard(data);
-                    }
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        }
-
-        showNoDataMessage() {
-            document.getElementById('no-data-message').style.display = 'block';
-            document.querySelector('.metrics-grid').style.display = 'none';
-            document.querySelector('.suggestions-panel').style.display = 'none';
-        }
-
-        updateDashboard(data) {
-            // Update the page with the fetched data
-            document.getElementById('temperature').textContent = `${data.temperature.toFixed(1)}°C`;
-            document.getElementById('moisture').textContent = `${data.moisture.toFixed(1)}%`;
-            document.getElementById('maturation').textContent = `${data.maturation_estimate} days`;
-
-            // Dynamically update suggestions
-            const suggestionsContent = document.getElementById('suggestions-content');
-            suggestionsContent.innerHTML = '';  // Clear existing suggestions
-
-            data.suggestions.forEach(suggestion => {
-                suggestionsContent.innerHTML += `<p>${suggestion}</p>`;
-            });
-
-            // Hide the "No data available" message
-            document.getElementById('no-data-message').style.display = 'none';
-            document.querySelector('.metrics-grid').style.display = 'block';
-            document.querySelector('.suggestions-panel').style.display = 'block';
-        }
-    }
-</script>
+<script src="{{ url_for('static', filename='js/cursor.js') }}"></script>
 {% endblock %}
