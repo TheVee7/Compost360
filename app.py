@@ -95,6 +95,9 @@ def create_app():
         else:
             return jsonify({"error": "No data available from ThingSpeak."}), 404
 
+    @app.route('/data_graphs')
+    def data_graphs():
+        return render_template('Data_graphs.html')
     
     return app
 if __name__ == '__main__':

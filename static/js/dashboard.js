@@ -42,3 +42,11 @@ function updateDashboard(data) {
     document.querySelector('.metrics-grid').style.display = 'block';
     document.querySelector('.suggestions-panel').style.display = 'block';
 }
+
+function toggleNav() {
+    const navLinks = document.querySelector('.nav-links');
+    const toggleButton = document.querySelector('.navbar-toggle');
+    const expanded = toggleButton.getAttribute('aria-expanded') === 'true' || false;
+    toggleButton.setAttribute('aria-expanded', !expanded);
+    navLinks.classList.toggle('open');
+}

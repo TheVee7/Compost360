@@ -13,13 +13,22 @@
     <nav class="navbar">
         <div class="logo">Compost360</div>
         <!-- Hamburger Toggle Button -->
-        <button class="navbar-toggle" aria-expanded="false" aria-label="Toggle navigation">☰</button>
+        <button class="navbar-toggle" aria-expanded="false" aria-label="Toggle navigation" onclick="toggleNav()">☰</button>
         <div class="nav-links">
             <a href="{{ url_for('index') }}">Home</a>
             <a href="{{ url_for('about') }}">About</a>
             <a href="{{ url_for('contact') }}">Contact</a>
         </div>
     </nav>
+    <script>
+        function toggleNav() {
+            const navLinks = document.querySelector('.nav-links');
+            const toggleButton = document.querySelector('.navbar-toggle');
+            const expanded = toggleButton.getAttribute('aria-expanded') === 'true' || false;
+            toggleButton.setAttribute('aria-expanded', !expanded);
+            navLinks.classList.toggle('open');
+        }
+    </script>
 
     <main class="container">
         {% with messages = get_flashed_messages() %}

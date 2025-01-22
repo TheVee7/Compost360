@@ -111,6 +111,31 @@ body::before {
     transform: scale(1.1);
 }
 
+@media (max-width: 768px) {
+    .navbar-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #2ecc71;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem;
+    }
+}
+
 /* Container */
 .container {
     width: 90%;
@@ -321,7 +346,7 @@ input:focus, select:focus, textarea:focus {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     /* Fixed width for consistent look */
     width: 100%;
-    max-width: 400px;
+    /* max-width: 400px; */
     /* Ensure consistent spacing */
     margin-bottom: 20px;
 }
@@ -334,7 +359,7 @@ input:focus, select:focus, textarea:focus {
     font-size: 2.5rem;
     font-weight: bold;
     color: #2ecc71;
-    margin: 16px 0;
+    margin: 12px 0;
     word-wrap: break-word;
 }
 
