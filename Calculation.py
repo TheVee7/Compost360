@@ -4,8 +4,8 @@ import requests
 class CompostMonitor:
     def __init__(self):
         # Ideal temperature ranges in Celsius
-        self.mesophilic_range = (20, 45)
-        self.thermophilic_range = (45, 70)
+        self.mesophilic_range = (20, 30)
+        self.thermophilic_range = (30, 70)
         
         # Ideal moisture range in percentage
         self.moisture_range = (40, 60)

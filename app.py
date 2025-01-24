@@ -43,22 +43,10 @@ def create_app():
         return render_template('about.html')
 
     @app.route('/contact', methods=['GET', 'POST'])
-    def contact():
-        if request.method == 'POST':
-            name = request.form.get('name')
-            email = request.form.get('email')
-            message = request.form.get('message')
-            
-            msg = Message('New Contact Form Submission',
-                         sender=app.config['MAIL_USERNAME'],
-                         recipients=[app.config['MAIL_USERNAME']])
-            msg.body = f"From: {name}\nEmail: {email}\nMessage: {message}"
-            mail.send(msg)
-            
-            flash('Thank you for your message!')
-            return redirect(url_for('contact'))
-        
+    def contact(): 
         return render_template('contact.html')
+    
+    
     @app.route('/api/dashboard-data')
     def dashboard_data():
         monitor = CompostMonitor()

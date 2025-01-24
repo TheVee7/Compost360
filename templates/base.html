@@ -20,15 +20,6 @@
             <a href="{{ url_for('contact') }}">Contact</a>
         </div>
     </nav>
-    <script>
-        function toggleNav() {
-            const navLinks = document.querySelector('.nav-links');
-            const toggleButton = document.querySelector('.navbar-toggle');
-            const expanded = toggleButton.getAttribute('aria-expanded') === 'true' || false;
-            toggleButton.setAttribute('aria-expanded', !expanded);
-            navLinks.classList.toggle('open');
-        }
-    </script>
 
     <main class="container">
         {% with messages = get_flashed_messages() %}
