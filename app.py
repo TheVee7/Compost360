@@ -46,7 +46,7 @@ def create_app():
     def contact(): 
         return render_template('contact.html')
     
-    
+
     @app.route('/api/dashboard-data')
     def dashboard_data():
         monitor = CompostMonitor()
@@ -88,6 +88,5 @@ def create_app():
         return render_template('Data_graphs.html')
     
     return app
-if __name__ == '__main__':
+if __name__ != '__main__':
     app = create_app()
-    app.run(host='0.0.0.0', port=5000, debug=True)
